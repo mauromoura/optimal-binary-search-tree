@@ -3,26 +3,35 @@ package br.com.ufu;
 public class Main {
 
   public static void main(String[] args) {
+    for (int i = 5; i < 10000; i++) {
+      double[][] testCases = Util.createRandomNodes(i);
+      calculate(testCases[0], testCases[1], i);
+    }
+  }
 
-    double p[] = new double[] {0, 0.15, 0.10, 0.05, 0.10, 0.20};
-    double q[] = new double[] {0.05, 0.10, 0.05, 0.05, 0.05, 0.10};
+  public static void calculate(double p[], double q[], int n) {
 
-    int n = 5;
+    // double p[] = new double[] {0, 0.15, 0.10, 0.05, 0.10, 0.20};
+    // double q[] = new double[] {0.05, 0.10, 0.05, 0.05, 0.05, 0.10};
 
     double w[][] = new double[n + 2][n + 1];
     double e[][] = new double[n + 2][n + 1];
     int root[][] = new int[n + 1][n + 1];
 
+    long startTime = System.currentTimeMillis();
     DynamicOBST.calculateOBST(p, q, n, w, e, root);
+    long elapsedTime = System.currentTimeMillis() - startTime;
+    System.out.print(elapsedTime + ";");
 
-    // constructOBST(root, q, p);
+    startTime = System.currentTimeMillis();
+    double resursiveResult = RecursiveOBST.calculateOBST(p, q, 1, n);
+    elapsedTime = System.currentTimeMillis() - startTime;
+    System.out.println(elapsedTime);
 
-    System.out.println("[Dynamic] Optimal binary search tree value -> " + e[1][n]);
-
-    double resursiveResult = RecursiveOBST.calculateOBST(p, q, 1, 5);
-
-    System.out.println("[Recursive] Optimal binary search tree value -> " + resursiveResult);
-
+    double dynamicResult = e[1][n];
+    if (Math.abs(dynamicResult - resursiveResult) > 0.000001) {
+      System.out.println("MISMATCH ->" + dynamicResult + " * " + resursiveResult);
+    }
 
   }
 
